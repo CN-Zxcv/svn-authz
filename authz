@@ -1,0 +1,101 @@
+[groups]
+admin = admin
+client_leaders = user1, user2
+client_workers = user3, user4
+server_leaders = user5, user6
+server_workers = user7, user8
+
+[actx:/trunk]
+@admin = r
+@client_leaders = rw
+@client_workers = r
+@server_leaders = rw
+@server_workers = r
+
+[actx:/trunk/client]
+@client_workers = rw
+@server_workers = 
+
+[actx:/trunk/config]
+@client_workers = rw
+@server_workers = rw
+
+[actx:/trunk/config/data/client]
+@client_workers = rw
+@server_workers = 
+
+[actx:/trunk/config/data/common]
+@client_workers = rw
+@server_workers = rw
+
+[actx:/trunk/server]
+@client_workers = 
+@server_workers = 
+
+[actx:/trunk/share]
+@client_workers = rw
+@server_workers = rw
+
+[actx:/trunk/client/client]
+@server_workers = r
+
+[actx:/trunk/client/source]
+@server_workers = 
+
+[actx:/trunk/config/data/server]
+@server_workers = rw
+@client_workers = 
+
+[actx:/trunk/server/engine]
+@server_workers = 
+
+[actx:/trunk/server/script]
+@server_workers = rw
+
+[actx:/branches/pr1]
+@admin = r
+@client_leaders = rw
+@client_workers = r
+@server_leaders = rw
+@server_workers = r
+
+[actx:/branches/pr1/client]
+@client_workers = rw
+@server_workers = 
+
+[actx:/branches/pr1/config]
+@client_workers = rw
+@server_workers = rw
+
+[actx:/branches/pr1/config/data/client]
+@client_workers = rw
+@server_workers = 
+
+[actx:/branches/pr1/config/data/common]
+@client_workers = rw
+@server_workers = rw
+
+[actx:/branches/pr1/server]
+@client_workers = 
+@server_workers = 
+
+[actx:/branches/pr1/share]
+@client_workers = rw
+@server_workers = rw
+
+[actx:/branches/pr1/client/client]
+@server_workers = r
+
+[actx:/branches/pr1/client/source]
+@server_workers = 
+
+[actx:/branches/pr1/config/data/server]
+@server_workers = rw
+@client_workers = 
+
+[actx:/branches/pr1/server/engine]
+@server_workers = 
+
+[actx:/branches/pr1/server/script]
+@server_workers = rw
+
