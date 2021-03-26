@@ -135,10 +135,17 @@ class Generator:
     def generate(self, path):
         config = configparser.ConfigParser()
         self.generateGroups(config)
+        self.generateRootPermission(config)
         for branch in self.repoBranches:
             self.generateOneBranch(config, branch)
         with open(path, 'w') as fp:
             config.write(fp)
+
+    def generateRootPermission(self, config):
+        sectionName = "%s:%s" % (self.repoName, "/")
+        if not config.has_section(sectionName):
+            config.add_section(sectionName)
+        config.set(sectionName, "@admin", "rw")
 
     def generateGroups(self, config):
         if not config.has_section("groups"):
@@ -279,32 +286,33 @@ class DirectoryTree:
                 return False
             node = child
 
-class SvnProxy:
-    def __init__(self, url, username, password):
-        self.url = url
-        self.username = username
-        self.password = password
-        self.dirs = []
+# class SvnProxy:
+#     def __init__(self, url, username, password):
+#         self.url = url
+#         self.username = username
+#         self.password = password
+#         self.dirs = []
 
-    def getAllDirectories(self):
-        # bash = 'svn list %s --username %s --password %s -R | grep "/$"' % (self.url, self.username, self.password)
-        bash = 'svn list %s --username %s --password %s -R' % (self.url, self.username, self.password)
-        completed = subprocess.run(bash, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        if completed.returncode != 0:
-            return []
-        subs = completed.stdout.decode('utf-8').splitlines()
-        return subs
+#     def getAllDirectories(self):
+#         # bash = 'svn list %s --username %s --password %s -R | grep "/$"' % (self.url, self.username, self.password)
+#         bash = 'svn list %s --username %s --password %s -R' % (self.url, self.username, self.password)
+#         # print(bash)
+#         completed = subprocess.run(bash, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+#         if completed.returncode != 0:
+#             return []
+#         subs = completed.stdout.decode('utf-8').splitlines()
+#         return subs
 
-    def getSubDirectories(self, path):
-        url = join(self.url, path)
-        bash = 'svn list %s --username %s --password %s | grep "/$"' % (url, self.username, self.password)
-        completed = subprocess.run(bash, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        if completed.returncode != 0:
-            print("!! no such directory", url)
-            return []
+#     def getSubDirectories(self, path):
+#         url = join(self.url, path)
+#         bash = 'svn list %s --username %s --password %s | grep "/$"' % (url, self.username, self.password)
+#         completed = subprocess.run(bash, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+#         if completed.returncode != 0:
+#             print("!! no such directory", url)
+#             return []
 
-        subs = completed.stdout.decode('utf-8').splitlines()
-        return list(map(lambda x: join(path, x), subs))
+#         subs = completed.stdout.decode('utf-8').splitlines()
+#         return list(map(lambda x: join(path, x), subs))
 
 def main():
     config = ConfigParser()
@@ -314,8 +322,10 @@ def main():
     svnUsername = config.get("svn", "username")
     svnPassword = config.get("svn", "password")
 
-    svn = SvnProxy(svnUrl, svnUsername, svnPassword)
-    dirs = svn.getAllDirectories()
+    # svn = SvnProxy(svnUrl, svnUsername, svnPassword)
+    # dirs = svn.getAllDirectories()
+    # print(dirs)
+    dirs = []
     tree = DirectoryTree(dirs)
     generator = Generator(tree)
     generator.parse(config)
